@@ -1,0 +1,23 @@
+{
+  "name": "defriminibrillatori",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlFacondini/defriminibrillatori.git"
+  },
+  "author": "AlFacondini",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlFacondini/defriminibrillatori/issues"
+  },
+  "homepage": "https://github.com/AlFacondini/defriminibrillatori#readme",
+  "dependencies": {
+    "firebase-admin": "^10.0.0",
+    "util": "^0.12.4"
+  }
+}
