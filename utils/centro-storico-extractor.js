@@ -1,5 +1,5 @@
 //Extracts the relevant data from https://opendata.comune.rimini.it/dataset/defibrillatori-centro-storico .geojson file.
-//Change the constants to match the name and location of your files.
+//Changes the constants to match the name and location of your files.
 
 //Input file format:
 //{
