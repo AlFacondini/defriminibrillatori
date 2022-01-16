@@ -2,3 +2,4 @@ node_modules/
 utils/input/
 utils/output/
 config/config.js
+config/firebase-adminsdk-key.json
