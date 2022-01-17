@@ -10,6 +10,7 @@ const {FIREBASE_KEY, FIREBASE_URL} = require('../config/config');
 var admin = require('firebase-admin');
 var path = require('path');
 var geolib = require('geolib');
+var { query, validationResult } = require('express-validator');
 var pathToKey = path.resolve('./config', FIREBASE_KEY);
 var serviceAccount = require(pathToKey);
 
@@ -24,14 +25,47 @@ var db = admin.database();
 var ref = db.ref('server/');
 var defiRef = ref.child('defibrillatori');
 
+// Validation middleware, checks if the query follows our format
+exports.validate = (method) => {
+    switch(method){
+        case 'get' : {
+            return [
+                query('latitude', 'latitude doesn\'t exist').exists().isFloat(),
+                query('longitude', 'longitude doesn\'t exist').exists().isFloat(),
+                query('n').optional().isInt()
+            ]
+        }
+        case 'post' : {
+            return[
+                query('latitude', 'latitude doesn\'t exist').exists().isFloat(),
+                query('longitude', 'longitude doesn\'t exist').exists().isFloat(),
+                query('address', 'address doesn\'t exist').exists().isString(),
+                query('place', 'place doesn\'t exist').exists().isString()
+            ]
+        }
+        case 'delete' : {
+            return[
+                query('id', 'id doesn\'t exist').exists().isString()
+            ]
+        }
+    }
+}
+
 // /closest GET middleware, responds with the closest or the n closest defibrillators
 exports.get = function(req, res, next){
+    // Check validation results
+    var errors = validationResult(req).array({onlyFirstError : true});
+    if(errors.length){
+        sendRes(res, 422, "ERROR", errors);
+        return;
+    }
+
     var lat = req.query.latitude;
     var lon = req.query.longitude;
     var reqCoords = [lon, lat];
-
+    
     // If n is not specified, only returns the closest
-    if(!"n" in req.query){
+    if(typeof req.query.n == 'undefined'){
         var closest = {"address" : "ERROR",
                         "place" : "ERROR",
                         "coords" : [0,0],
@@ -104,6 +138,13 @@ exports.get = function(req, res, next){
 
 // /defibrillator POST middleware, adds a new defibrillator node to the firebase database
 exports.post = function(req, res, next){
+    // Check validation results
+    var errors = validationResult(req).array({onlyFirstError : true});
+    if(errors.length){
+        sendRes(res, 422, "ERROR", errors);
+        return;
+    }
+
     var lat = req.query.latitude;
     var lon = req.query.longitude;
     var coords = [lon, lat];
@@ -126,6 +167,13 @@ exports.post = function(req, res, next){
 
 // /defibrillator DELETE middleware, deletes a defibrillator node from the firebase database
 exports.delete = function(req, res, next){
+    // Check validation results
+    var errors = validationResult(req).array({onlyFirstError : true});
+    if(errors.length){
+        sendRes(res, 422, "ERROR", errors);
+        return;
+    }
+
     var id = req.query.id;
 
     defiRef.child(id).remove()

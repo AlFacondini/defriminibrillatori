@@ -10,16 +10,19 @@ module.exports = function(){
     var router = express.Router();
 
     // /closest router
-    // GET: answers with the closest or the n closest defibs 
+    // GET: validates request and answers with the closest or the n closest defibs 
     router.route("/closest")
-        .get(middleware.get);
+        .get(middleware.validate('get'),
+            middleware.get);
 
     // /defibrillator router
-    // POST: adds a new defib to the database
-    // DELETE: deletes an existing defib from the database
+    // POST: validates request and adds a new defib to the database
+    // DELETE: validates request and deletes an existing defib from the database
     router.route("/defibrillator")
-        .post(middleware.post)
-        .delete(middleware.delete);
+        .post(middleware.validate('post'),
+            middleware.post)
+        .delete(middleware.validate('delete'),
+            middleware.delete);
 
     return router;
 }
