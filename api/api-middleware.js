@@ -95,6 +95,12 @@ exports.get = function(req, res, next){
         var n = req.query.n;
         var ret = [];
 
+        // Make use n is positive
+        if(n <= 0){
+            sendRes(res, 422, "ERROR", "n must be positive");
+            return;
+        }
+
         // Iterate through the db values
         defiRef.once('value', 
         (data) => {

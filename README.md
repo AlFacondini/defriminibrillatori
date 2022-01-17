@@ -25,7 +25,7 @@ Il servizio è stato sviluppato totalmente in JavaScript per il runtime Node.js 
 
 I dati relativi ai defibrillatori sono salvati in un database RealtimeDatabase di Google in formato JSON, che è anche il formato delle risposte fornite dalla nostra api.
 
-Viene inoltre fatto utilizzo della libreria geolib per il calcolo delle distanze tramite latitudine e longitudine.
+Viene inoltre fatto utilizzo della libreria geolib per il calcolo delle distanze tramite latitudine e longitudine e della libreria express-validator per la validazione delle query.
 
 ## Dati e servizi esterni
 
@@ -37,7 +37,63 @@ Viene fatto utilizzo del servizio RealtimeDatabase di Google tramite la libreria
 
 ## Documentazione API
 
-TODO
+Ogni API include i seguenti header nella risposta:
+```
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 43
+ETag: XXXXXXXXXXXXXXXX
+Date: Mon, 17 Jan 2022 15:40:37 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+```
+Il corpo della risposta è sempre un oggetto JSON formato da uno status (sempre una stringa) e un messaggio (stringa o oggetti defibrillatore):
+```JSON
+{
+    "status": "Success",
+    "message": "Node added"
+}
+```
+
+### GET: /closest ###
+API per visualizzare uno o più dei defibrillatori più vicini alla propria posizione.
+
+| field | Type | Required | Description
+|-----|-------------|-----------|--|
+| latitude | float | Yes | Latitudine utente |
+| longitude | float | Yes | Longitudine utente |
+| n | integer | No | Numero di defibrillatori da visualizzare |
+
+Se ha successo, restituisce uno o più oggetti defibrillatore nel campo message del corpo della risposta.
+Gli oggetti defibrillatore hanno la seguente forma:
+```JSON
+{
+    "address": "string",
+    "place": [longitude,latitude],
+    "coords": "string",
+    "distance": integer(meters)
+}
+```
+### POST: /defibrillatori ###
+API per aggiungere un defibrillatore al database.
+
+| field | Type | Required | Description
+|-----|-------------|-----------|--|
+| latitude | float | Yes | Latitudine utente |
+| longitude | float | Yes | Longitudine utente |
+| address | string | Yes | Indirizzo del defibrillatore |
+| place | string | Yes | Luogo in cui si trova il defibrillatore |
+
+Se ha successo, restituisce semplicemente il messaggio "Node added" nel corpo della risposta.
+
+### DELETE: /defibrillatori ###
+API per eliminare un defibrillatore dal database.
+
+| field | Type | Required | Description
+|-----|-------------|-----------|--|
+| id | string | Yes | Id defibrillatore da eliminare |
+
+Se ha successo, restituisce semplicemente il messaggio "Node deleted" nel corpo della risposta.
 
 ## Descrizione della messa online del servizio
 
@@ -62,7 +118,13 @@ node index
 
 ## Esempi
 
-TODO
+![get-succ-1](images/get-succ-1.png)
+![get-succ-2](images/get-succ-2.png)
+![get-err](images/get-err.png)
+![post-succ](images/post-succ.png)
+![get-err](images/get-err.png)
+![delete-succ](images/delete-succ.png)
+![delete-err](images/delete-err.png)
 
 ## Licenza
 ```
