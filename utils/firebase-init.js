@@ -40,4 +40,5 @@ data2.forEach(obj => {
 
 defiRef.once('value', (data) => {
     console.log(count + ' elements added. The total number of elements is now ' + data.numChildren() + '.');
+    console.log("Please press CTRL + C");
 })
