@@ -124,6 +124,20 @@ exports.post = function(req, res, next){
         });
 }
 
+// /defibrillator DELETE middleware, deletes a defibrillator node from the firebase database
+exports.delete = function(req, res, next){
+    var id = req.query.id;
+
+    defiRef.child(id).remove()
+        .then(function(){
+            sendRes(res, 200, "Success", "Node deleted");
+        })
+        .catch(function(error){
+            console.log(error);
+            sendRes(res, 500, "ERROR", "Database Error");
+        });
+}
+
 // Log and send the response
 function sendRes(res, httpCode, status, message){
     console.log("Sending response.");

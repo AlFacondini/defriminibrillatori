@@ -15,14 +15,11 @@ module.exports = function(){
         .get(middleware.get);
 
     // /defibrillator router
-    // POST: 
-    // DELETE:   
+    // POST: adds a new defib to the database
+    // DELETE: deletes an existing defib from the database
     router.route("/defibrillator")
         .post(middleware.post)
-        .delete(function(req, res){
-            console.log("Connection to /defibrillator with DELETE from %s", req.ip);
-            res.send("Okie-dokie.");
-        });
+        .delete(middleware.delete);
 
     return router;
 }
