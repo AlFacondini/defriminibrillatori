@@ -18,10 +18,7 @@ module.exports = function(){
     // POST: 
     // DELETE:   
     router.route("/defibrillator")
-        .post(function(req, res){
-            console.log("Connection to /defibrillator with POST from %s", req.ip);
-            res.send("Okie-dokie.");
-        })
+        .post(middleware.post)
         .delete(function(req, res){
             console.log("Connection to /defibrillator with DELETE from %s", req.ip);
             res.send("Okie-dokie.");

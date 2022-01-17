@@ -98,14 +98,36 @@ exports.get = function(req, res, next){
         (error) => {
             console.log(error);
             sendRes(res, 500, "ERROR", "Database Error");
-        })
+        });
     }
+}
+
+// /defibrillator POST middleware, adds a new defibrillator node to the firebase database
+exports.post = function(req, res, next){
+    var lat = req.query.latitude;
+    var lon = req.query.longitude;
+    var coords = [lon, lat];
+    var address = req.query.address;
+    var place = req.query.place;
+
+    var obj = {"address" : address,
+                "coords" : coords,
+                "place" : place}
+
+    defiRef.push().set(obj)
+        .then(function(){
+            sendRes(res, 200, "Success", "Node added");
+        })
+        .catch(function(error){
+            console.log(error);
+            sendRes(res, 500, "ERROR", "Database Error");
+        });
 }
 
 // Log and send the response
 function sendRes(res, httpCode, status, message){
     console.log("Sending response.");
-    console.log("Status code:" + httpCode + " Status:" + status + " Message: " + message);
+    console.log("Status code: " + httpCode + " Status: " + status + " Message: " + message);
     return res.status(httpCode).json({
         status : status,
         message : message
